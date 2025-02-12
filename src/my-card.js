@@ -12,6 +12,10 @@ export class MyCard extends LitElement {
     return 'my-card';
   }
 
+  /**
+   * Default
+   * V
+   */
   constructor() {
     super();
     this.title = "Default Card";
