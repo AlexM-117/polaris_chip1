@@ -25,6 +25,8 @@ export class MyCard extends LitElement {
     this.stats = "• ~ views • ~ years ago";
     this.description = "Description for video";
     this.channelProfile = "https://www.shutterstock.com/image-vector/avatar-gender-neutral-silhouette-vector-600nw-2470054311.jpg";
+    this.fancy = false;
+    this.URL = "https://hax.psu.edu";
   }
 
   static get styles() {
@@ -32,15 +34,21 @@ export class MyCard extends LitElement {
       :host {
         display: block;
         max-width: 400px;
-        background-color: #1a1a1a;
+        background-color: var(--my-card-bg, #1a1a1a);
         border-radius: 12px;
         overflow: hidden;
         padding: 16px;
       }
 
+      :host([fancy]) details[open] {
+        --my-card-bg: var(--my-card-fancy-bg, #2a2a2a);
+        border: none;
+      }
+
       .thumbnail-container {
         position: relative;
         width: 100%;
+        border-radius: 8px;
       }
 
       .yt-thumbnail {
@@ -102,18 +110,59 @@ export class MyCard extends LitElement {
         gap: 4px;
       }
       
-      .description {
-        margin-top: 8px;
-        color: #bbb;
+      details summary {
+        text-align: left;
+        font-size: 20px;
+        padding: 8px 0;
+        color: #ddd;
+        cursor: pointer;
+  }
+  
+      details[open] summary {
+        font-weight: bold;
+      }
+  
+      details div {
+        border: 2px solid #333;
+        text-align: left;
+        padding: 8px;
+        height: 70px;
+        overflow: auto;
         font-size: 12px;
-        line-height: 1.5;
+        color: #bbb;
+        border-radius: 4px;
+        background-color: #242424;
+      }
+
+      .details-button {
+        width: 100%;
+        background-color: #ff0000;
+        color: white;
+        padding: 10px;
+        margin-top: 8px;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      .details-button:hover {
+        background-color: #cc0000;
       }
     `;
   }
 
+  openChanged(e) {
+    this.fancy = e.target.open;
+  }
+
+  handleDetailsClick() {
+    window.location.href = this.URL;
+  }
+
   render() {
     return html`
-    <div class="yt-card">
+    <div class="yt-card" ?fancy="${this.fancy}">
       <div class="thumbnail-container">
         <img src="${this.image}" alt="Thumbnail" class="yt-thumbnail">
         <span class="duration">${this.duration}</span>
@@ -128,9 +177,15 @@ export class MyCard extends LitElement {
               <span class="channel-name">${this.channel}</span>
               <span class="video-stats">${this.stats}</span>
             </div>
-            <p class="description">${this.description}</p>
           </div>
         </div>
+        <details @toggle="${this.openChanged}">
+          <summary>More Info</summary>
+          <div>
+            <slot>${this.description}</slot>
+          </div>
+        </details>
+        <button class="details-button" @click="${this.handleDetailsClick}">Details</button>
       </div>
     </div>
     `;
@@ -144,7 +199,9 @@ export class MyCard extends LitElement {
       channel: {type: String},
       stats: {type: String},
       description: {type: String},
-      channelProfile: {type: String}
+      channelProfile: {type: String},
+      fancy: {type: Boolean, reflect: true},
+      URL: {type: String}
     };
   }
 }
