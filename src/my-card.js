@@ -38,11 +38,48 @@ export class MyCard extends LitElement {
         border-radius: 12px;
         overflow: hidden;
         padding: 16px;
+        transition: background-color 0.3s, color 0.3s;
       }
 
-      :host([fancy]) details[open] {
-        --my-card-bg: var(--my-card-fancy-bg, #2a2a2a);
-        border: none;
+      :host([fancy]) {
+        background-color: #eaeaea;
+      }
+
+      :host([fancy]) .video-title,
+      :host([fancy]) .channel-info,
+      :host([fancy]) .description {
+        color: #212121;
+      }
+
+      details summary {
+        text-align: left;
+        font-size: 20px;
+        padding: 8px 0;
+        color: #ddd;
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      :host([fancy]) details summary {
+        color: #212121;
+        background-color: #ffffff;
+      }
+  
+      details[open] summary {
+        font-weight: bold;
+      }
+  
+      details div {
+        border: 2px solid #333;
+        text-align: left;
+        padding: 8px;
+        height: 70px;
+        overflow: auto;
+        font-size: 12px;
+        color: #bbb;
+        border-radius: 4px;
+        background-color: #242424;
+        transition: background-color 0.3s, color 0.3s;
       }
 
       .thumbnail-container {
@@ -109,30 +146,6 @@ export class MyCard extends LitElement {
         font-size: 12px;
         gap: 4px;
       }
-      
-      details summary {
-        text-align: left;
-        font-size: 20px;
-        padding: 8px 0;
-        color: #ddd;
-        cursor: pointer;
-  }
-  
-      details[open] summary {
-        font-weight: bold;
-      }
-  
-      details div {
-        border: 2px solid #333;
-        text-align: left;
-        padding: 8px;
-        height: 70px;
-        overflow: auto;
-        font-size: 12px;
-        color: #bbb;
-        border-radius: 4px;
-        background-color: #242424;
-      }
 
       .details-button {
         width: 100%;
@@ -149,6 +162,20 @@ export class MyCard extends LitElement {
       .details-button:hover {
         background-color: #cc0000;
       }
+
+      .toggle-button {
+        background-color: #ffffff;
+        color: black;
+        padding: 10px;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      .toggle-button:hover {
+        background-color: #eeeeee;
+      }
     `;
   }
 
@@ -160,9 +187,14 @@ export class MyCard extends LitElement {
     window.location.href = this.URL;
   }
 
+  toggleFancy() {
+    this.fancy = !this.fancy;
+  }
+
   render() {
     return html`
-    <div class="yt-card" ?fancy="${this.fancy}">
+    <button class="toggle-button" @click="${this.toggleFancy}">Toggle</button>
+    <div class="yt-card">
       <div class="thumbnail-container">
         <img src="${this.image}" alt="Thumbnail" class="yt-thumbnail">
         <span class="duration">${this.duration}</span>
@@ -179,7 +211,7 @@ export class MyCard extends LitElement {
             </div>
           </div>
         </div>
-        <details @toggle="${this.openChanged}">
+        <details>
           <summary>More Info</summary>
           <div>
             <slot>${this.description}</slot>
