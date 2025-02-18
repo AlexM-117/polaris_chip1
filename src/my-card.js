@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'lit';
+import "@haxtheweb/meme-maker/meme-maker.js";
 
 /**
  * Now it's your turn. Here's what we need to try and do:
@@ -33,6 +34,7 @@ export class MyCard extends LitElement {
     return css`
       :host {
         display: block;
+        display: inline-block;
         max-width: 400px;
         background-color: var(--my-card-bg, #1a1a1a);
         border-radius: 12px;
@@ -180,7 +182,12 @@ export class MyCard extends LitElement {
   }
 
   openChanged(e) {
-    this.fancy = e.target.open;
+    if (e.target.getAttribute('open') !== null) {
+      this.fancy = true;
+    }
+    else {
+      this.fancy = false;
+    }
   }
 
   handleDetailsClick() {
@@ -196,7 +203,12 @@ export class MyCard extends LitElement {
     <button class="toggle-button" @click="${this.toggleFancy}">Toggle</button>
     <div class="yt-card">
       <div class="thumbnail-container">
-        <img src="${this.image}" alt="Thumbnail" class="yt-thumbnail">
+      <meme-maker
+          alt="Up your meme game with hax and allow for more accessible memes"
+          image-url="${this.image}"
+          bottom-text="Meme"
+          top-text="Meme">
+      </meme-maker>
         <span class="duration">${this.duration}</span>
       </div>
 
